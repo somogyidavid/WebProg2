@@ -42,6 +42,6 @@
 -Felhasználók<br>
 -Jogosultsági körök<br>
 -Hirdetések (autók)<br>
-(-Lehetséges választható márka-modell kombinácók?)
+-Lehetséges választható márka-modell kombinácók
 
 # --------------------------------------------------
