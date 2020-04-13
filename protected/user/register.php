@@ -27,7 +27,9 @@
   }
 ?>
 
-<form method="post">
+<div class="container register-container" style="background-color: white;">
+<form method="post" class="bpadding">
+<h1 class="h3 mb-3 text-center font-weight-normal">Regisztráció</h1>
     <div class="form-row">
         <div class="form-group col-md-6">
         <label for="registerFirstName">Vezetéknév</label>
@@ -60,6 +62,6 @@
       <input type="password" class="form-control" id="registerPassword1" name="password1" value="">
     </div>
   </div>
-
-  <button type="submit" class="btn btn-primary" name="register">Regisztráció</button>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Regisztáció</button>
 </form>
+</div>
