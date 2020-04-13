@@ -42,7 +42,15 @@ body {
     border-radius: 20px;
 }
 
-.footer {
+.register-container{
+  width: 60%;
+}
+
+.bpadding{
+  margin-bottom: 5%;
+}
+
+.footer{
     position: absolute;
     bottom: 0;
     width: 100%;
