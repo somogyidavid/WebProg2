@@ -16,15 +16,22 @@
     $postData['password'] = "";
   }
 ?>
-<form method="post">
-  <div class="form-group">
-    <label for="loginEmail">Email address</label>
-    <input type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp" name="email" value="<?=isset($postData) ? $postData['email'] : '';?>">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+
+
+<div class="container login-container" style="background-color: white;">
+  <div class="login-form">
+    <form class="form-signin">
+      <h1 class="h3 mb-3 text-center font-weight-normal">Bejelentkezés</h1>
+        <label for="inputEmail" class="sr-only" name="email">Email</label>
+          <input type="email" id="inputEmail" class="form-control mb-4" placeholder="Felhasználónév" required autofocus>
+        <label for="inputPassword" class="sr-only" name="password">Jelszó</label>
+          <input type="password" id="inputPassword" class="form-control" placeholder="Jelszó" required>
+      <div class="checkbox mb-4">
+          <label>
+            <input type="checkbox" value="remember-me"> Felhasználónév megjegyzése
+          </label>
+        </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Bejelentkezés</button>
+      </form>
   </div>
-  <div class="form-group">
-    <label for="loginPassword">Password</label>
-    <input type="password" class="form-control" id="loginPassword" name="password" value="">
-  </div>
-  <button type="submit" class="btn btn-primary" name="login">Bejelentkezés</button>
-</form>
+</div>
