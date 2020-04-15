@@ -14,7 +14,7 @@
 <body>
     <div class="container-fluid">
         <header><?php include_once PROTECTED_DIR.'header.php';?></header>
-        <content><?php require_once PROTECTED_DIR.'routing.php'?></content>
+        <main><?php require_once PROTECTED_DIR.'routing.php'?></main>
         <footer><?php include_once PROTECTED_DIR.'footer.php'?></footer>
     </div>
 
