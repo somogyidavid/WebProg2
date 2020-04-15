@@ -25,8 +25,8 @@
             $_SESSION['lname'] = $record['last_name'];
             $_SESSION['email'] = $record['email'];
             $_SESSION['permission'] = $record['permission'];
-
-            header('Location: index.php');
+            
+            return true;
         }
         return false;
     }
@@ -47,7 +47,7 @@
             ];
 
             if(executeDML($query, $params))
-                header('Location: index.php?P=login');
+                return true;
         }
         return false;
     }
