@@ -3,7 +3,7 @@
 ## Felhasználói rendszer: 2 jogosultsági kör
 
 ### -Admin:
--Összes/saját hirdetés szerkesztése, törlése, illetve hirdetés feladás.<br>
+-Összes/saját hirdetés szerkesztése, törlése, illetve hirdetés feladás. [ ]<br>
 -Összes felhasználó adatainak kezelése, bármely profil törlése.
 
 ### -User:
