@@ -44,10 +44,7 @@ body {
 
 .register-container{
   width: 60%;
-}
-
-.bpadding{
-  margin-bottom: 5%;
+  padding: 5px  !important;
 }
 
 .footer{
