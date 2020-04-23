@@ -13,6 +13,10 @@
         return $result;
     }
 
+    function DisplayCustomError($error_message){
+        echo "<div class='alert alert-danger'>"."Hiba: ".$error_message."</div>";
+    }
+
     function DisplaySuccess($message){
         echo "<div class='alert alert-success'>"."Sikeres ".$message."</div>";
     }
