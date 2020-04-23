@@ -8,8 +8,12 @@
 
       $errors=[];
 
-      if(empty($_POST['price']) || empty($_POST['kilometer']) || empty($_POST['engineCapacity']) || empty($_POST['description']) || empty($_POST['contact2'])){
+
+      if(empty($_POST['price']) || empty($_POST['kilometer']) || empty($_POST['engineCapacity']) || empty($_POST['description']) || empty($_POST['contact2']) || empty($_POST['title'])){
         $errors['general'][] = "Hiányzó adat(ok)!";
+      }
+      if(strlen($_POST['title'] > 64)){
+        $errors['title'][] = "Túl hosszú cím!";
       }
       if($_POST['brandSelect'] == 0){
         $errors['brand'][] = "Hiányzó márka!";
@@ -33,7 +37,7 @@
         $errors['fuel'][] = "Hiányzó üzemanyag!";
       }
       if($_POST['engineCapacity'] <= 0){
-        $errors['capacity'][] = "Nem megfelelő hengerűrtartalom!";
+        $errors['engineCapacity'][] = "Nem megfelelő hengerűrtartalom!";
       }
       if($_POST['color'] == "Válassz színt!"){
         $errors['color'][] = "Hiányzó szín!";
@@ -48,6 +52,7 @@
         if(count($errors) == 0){
           $postData = [
             'licencePlate' => $_POST['licencePlate'],
+            'title' => $_POST['title'],
             'brand' => $_POST['brandSelect'],
             'model' => $_POST['model'],
             'vintage' => $_POST['vintage'],
@@ -62,12 +67,13 @@
             'contact1' => $_POST['contact1'],
             'contact2' => $_POST['contact2']
           ];
-          $title = "Eladó";
           $contact = '+36'.$postData['contact1'].$postData['contact2'];
 
-        if(insertAdvertisement($_SESSION['uid'],$title, $postData['licencePlate'],$postData['brand'],$postData['model'],$postData['vintage'],$postData['type'],$postData['condition'],
-        $postData['price'],$postData['kilometer'],$postData['fuel'],$postData['capacity'],$postData['color'],$postData['description'],$contact)){
-          header('Location: index.php?P=addAdvertisement&successful_insert=1');
+        if(insertAdvertisement($_SESSION['uid'],$postData['title'], $postData['licencePlate'],$postData['brand'],$postData['model'],$postData['vintage'],$postData['type'],$postData['condition'],$postData['price'],$postData['kilometer'],$postData['fuel'],$postData['capacity'],$postData['color'],$postData['description'],$contact)){
+          header('Location: index.php?P=home&successful_ad_insert=1');
+        }
+        else{
+          DisplayCustomError("Már létező hirdetés!");
         }
       }
     }
@@ -82,9 +88,18 @@
   </div>
     
   <div class="container mt-5 register-container" style="background-color: white;">
-  <!-- TODO: TITLE -->
+  
   <form method="post">
   <h1 class="h3 mb-3 text-center font-weight-normal">Új hirdetés feladása</h1>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+          <label>Hirdetés címe</label>
+          <input type="text" class="form-control <?php echo isset($errors['title']) ? 'border border-danger' : ''; ?>" name="title" value="<?=isset($_POST['title']) ? $_POST['title'] : "";?>">
+          <small class="text-danger"><?php echo DisplayError('title'); ?></small>
+        </div>
+    </div>
+
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="brandSelect">Márka</label>
@@ -117,7 +132,7 @@
             <select class="form-control <?php echo isset($errors['vintage']) ? 'border border-danger' : ''; ?>" name="vintage">
                 <option>Adja meg az évjáratot!</option>
               <?php for($i=date("Y"); $i > 1979; $i--): ?>
-                <option>><?=$i?></option>
+                <option><?=$i?></option>
               <?php endfor; ?>
             </select>
             <small class="text-danger"><?php echo DisplayError('vintage'); ?></small>
@@ -126,12 +141,12 @@
             <label>Kivitel</label>
                 <select class="form-control <?php echo isset($errors['type']) ? 'border border-danger' : ''; ?>" name="type">
                 <option>Válassz kivitelt!</option>
-                <option>Egyterű</option>
-                <option>Ferdehátú</option>
-                <option>Kisbusz</option>
-                <option>Kombi</option>
-                <option>Lépcsőshátú</option>
-                <option>Sedan</option>
+                <option <?= isset($_POST['type']) && $_POST['type'] == "Egyterű" ? "selected" : "" ?>>Egyterű</option>
+                <option <?= isset($_POST['type']) && $_POST['type'] == "Ferdehátú" ? "selected" : "" ?>>Ferdehátú</option>
+                <option <?= isset($_POST['type']) && $_POST['type'] == "Kisbusz" ? "selected" : "" ?>>Kisbusz</option>
+                <option <?= isset($_POST['type']) && $_POST['type'] == "Kombi" ? "selected" : "" ?>>Kombi</option>
+                <option <?= isset($_POST['type']) && $_POST['type'] == "Lépcsőshátú" ? "selected" : "" ?>>Lépcsőshátú</option>
+                <option <?= isset($_POST['type']) && $_POST['type'] == "Sedan" ? "selected" : "" ?>>Sedan</option>
             </select>
             <small class="text-danger"><?php echo DisplayError('type'); ?></small>
         </div>
@@ -177,12 +192,12 @@
             <label>Üzemanyag</label>
             <select class="form-control <?php echo isset($errors['fuel']) ? 'border border-danger' : ''; ?>" name="fuel">
                 <option>Válassz üzemanyagot!</option>
-                <option>Benzin</option>
-                <option>Dízel</option>
-                <option>Benzin/Gáz</option>
-                <option>Hibrid benzin</option>
-                <option>Hibrid dízel</option>
-                <option>Elektromos</option>
+                <option <?= isset($_POST['fuel']) && $_POST['fuel'] == "Benzin" ? "selected" : "" ?>>Benzin</option>
+                <option <?= isset($_POST['fuel']) && $_POST['fuel'] == "Dízel" ? "selected" : "" ?>>Dízel</option>
+                <option <?= isset($_POST['fuel']) && $_POST['fuel'] == "Benzin/Gáz" ? "selected" : "" ?>>Benzin/Gáz</option>
+                <option <?= isset($_POST['fuel']) && $_POST['fuel'] == "Hibrid benzin" ? "selected" : "" ?>>Hibrid benzin</option>
+                <option <?= isset($_POST['fuel']) && $_POST['fuel'] == "Hibrid dízel" ? "selected" : "" ?>>Hibrid dízel</option>
+                <option <?= isset($_POST['fuel']) && $_POST['fuel'] == "Elektromos" ? "selected" : "" ?>>Elektromos</option>
             </select>
             <small class="text-danger"><?php echo DisplayError('fuel'); ?></small>
         </div>
@@ -193,10 +208,10 @@
         <label>Hengerűrtartalom</label>
 
         <div class="input-group-append">
-        <input type="text" class="form-control <?php echo isset($errors['capacity']) ? 'border border-danger' : ''; ?>" name="engineCapacity" value="<?=isset($_POST['capacity']) ? $_POST['engineCapacity'] : "";?>">
+        <input type="text" class="form-control <?php echo isset($errors['engineCapacity']) ? 'border border-danger' : ''; ?>" name="engineCapacity" value="<?=isset($_POST['engineCapacity']) ? $_POST['engineCapacity'] : "";?>">
         <span class="input-group-text">cm³</span>
         </div>
-        <small class="text-danger"><?php echo DisplayError('capacity'); ?></small>
+        <small class="text-danger"><?php echo DisplayError('engineCapacity'); ?></small>
       </div>
         <div class="form-group col-md-6">
             <label>Szín</label>
