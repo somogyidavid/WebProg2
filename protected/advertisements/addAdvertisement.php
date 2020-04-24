@@ -8,7 +8,6 @@
 
       $errors=[];
 
-
       if(empty($_POST['price']) || empty($_POST['kilometer']) || empty($_POST['engineCapacity']) || empty($_POST['description']) || empty($_POST['contact2']) || empty($_POST['title'])){
         $errors['general'][] = "Hiányzó adat(ok)!";
       }
@@ -48,8 +47,13 @@
       if(Valid_LicensePlate($_POST['licencePlate']) == 0){
         $errors['licencePlate'][] = "Nem megfelelő rendszám formátum!";
       }
+      if(empty($_FILES['image']['name'])){
+        $errors['image'][] = "Kép feltöltése kötelező!";
+      }
 
         if(count($errors) == 0){
+          $temp_filename = explode('.',$_FILES['image']['name']);
+          $filename = str_replace('-', '', $_POST['licencePlate']) . '.' . end($temp_filename);
           $postData = [
             'licencePlate' => $_POST['licencePlate'],
             'title' => $_POST['title'],
@@ -65,12 +69,20 @@
             'color' => $_POST['color'],
             'description' => $_POST['description'],
             'contact1' => $_POST['contact1'],
-            'contact2' => $_POST['contact2']
+            'contact2' => $_POST['contact2'],
+            'image' => $filename
           ];
+
+          $target = 'public/images/'.$filename;
           $contact = '+36'.$postData['contact1'].$postData['contact2'];
 
-        if(insertAdvertisement($_SESSION['uid'],$postData['title'], $postData['licencePlate'],$postData['brand'],$postData['model'],$postData['vintage'],$postData['type'],$postData['condition'],$postData['price'],$postData['kilometer'],$postData['fuel'],$postData['capacity'],$postData['color'],$postData['description'],$contact)){
-          header('Location: index.php?P=home&successful_ad_insert=1');
+        if(insertAdvertisement($_SESSION['uid'],$postData['title'], $postData['licencePlate'],$postData['brand'],$postData['model'],$postData['vintage'],$postData['type'],$postData['condition'],$postData['price'],$postData['kilometer'],$postData['fuel'],$postData['capacity'],$postData['color'],$postData['description'],$contact,$postData['image'])){
+          if(move_uploaded_file($_FILES['image']['tmp_name'],$target)){
+            header('Location: index.php?P=home&successful_ad_insert=1');
+          }
+          else{
+            DisplayCustomError("Sikertelen fájlfeltöltés!");
+          }
         }
         else{
           DisplayCustomError("Már létező hirdetés!");
@@ -89,12 +101,12 @@
     
   <div class="container mt-5 register-container" style="background-color: white;">
   
-  <form method="post">
-  <h1 class="h3 mb-3 text-center font-weight-normal">Új hirdetés feladása</h1>
+  <form method="post" enctype="multipart/form-data">
+  <h1 class="h3 mb-3 text-center font-weight-bold">Új hirdetés feladása</h1>
 
     <div class="form-row">
         <div class="form-group col-md-12">
-          <label>Hirdetés címe</label>
+          <label class="font-weight-bold">Hirdetés címe</label>
           <input type="text" class="form-control <?php echo isset($errors['title']) ? 'border border-danger' : ''; ?>" name="title" value="<?=isset($_POST['title']) ? $_POST['title'] : "";?>">
           <small class="text-danger"><?php echo DisplayError('title'); ?></small>
         </div>
@@ -102,7 +114,7 @@
 
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="brandSelect">Márka</label>
+            <label class="font-weight-bold">Márka</label>
             <select class="form-control <?php echo isset($errors['brand']) ? 'border border-danger' : ''; ?>" name="brandSelect" id="sel_brand">
               <option value ="0">Válassz egy márkát!</option>
                   <?php
@@ -119,7 +131,7 @@
             <small class="text-danger"><?php echo DisplayError('brand'); ?></small>
         </div>
         <div class="form-group col-md-6">
-            <label for="modelSelect">Modell</label>
+            <label class="font-weight-bold">Modell</label>
                 <select class="form-control" name="model" id="sel_model">
                   <option value="0">Válassz egy modellt!</option>
             </select>
@@ -128,7 +140,7 @@
 
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label>Évjárat</label>
+            <label class="font-weight-bold">Évjárat</label>
             <select class="form-control <?php echo isset($errors['vintage']) ? 'border border-danger' : ''; ?>" name="vintage">
                 <option>Adja meg az évjáratot!</option>
               <?php for($i=date("Y"); $i > 1979; $i--): ?>
@@ -138,7 +150,7 @@
             <small class="text-danger"><?php echo DisplayError('vintage'); ?></small>
         </div>
         <div class="form-group col-md-6">
-            <label>Kivitel</label>
+            <label class="font-weight-bold">Kivitel</label>
                 <select class="form-control <?php echo isset($errors['type']) ? 'border border-danger' : ''; ?>" name="type">
                 <option>Válassz kivitelt!</option>
                 <option <?= isset($_POST['type']) && $_POST['type'] == "Egyterű" ? "selected" : "" ?>>Egyterű</option>
@@ -154,7 +166,7 @@
 
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label>Állapot</label>
+            <label class="font-weight-bold">Állapot</label>
             <select class="form-control <?php echo isset($errors['condition']) ? 'border border-danger' : ''; ?>" name="condition">
                 <option>Válassz állapotot!</option>
                 <option <?= isset($_POST['condition']) && $_POST['condition'] == "Kitűnő" ? "selected" : "" ?>>Kitűnő</option>
@@ -167,7 +179,7 @@
             <small class="text-danger"><?php echo DisplayError('condition'); ?></small>
         </div>
         <div class="form-group col-md-6">
-        <label>Vételár</label>
+        <label class="font-weight-bold">Vételár</label>
         <div class="input-group-append">
         <input type="text" class="form-control <?php echo isset($errors['price']) ? 'border border-danger' : ''; ?>" name="price" value="<?=isset($_POST['price']) ? $_POST['price'] : "";?>">
         <span class="input-group-text">Ft</span>
@@ -179,7 +191,7 @@
 
     <div class="form-row">
     <div class="form-group col-md-6">
-        <label>Km óra állása</label>
+        <label class="font-weight-bold">Km óra állása</label>
 
         <div class="input-group-append">
         <input type="text" class="form-control <?php echo isset($errors['kilometer']) ? 'border border-danger' : ''; ?>" name="kilometer" value="<?=isset($_POST['kilometer']) ? $_POST['kilometer'] : "";?>">
@@ -189,7 +201,7 @@
         <small class="text-danger"><?php echo DisplayError('kilometer'); ?></small>
       </div>
         <div class="form-group col-md-6">
-            <label>Üzemanyag</label>
+            <label class="font-weight-bold">Üzemanyag</label>
             <select class="form-control <?php echo isset($errors['fuel']) ? 'border border-danger' : ''; ?>" name="fuel">
                 <option>Válassz üzemanyagot!</option>
                 <option <?= isset($_POST['fuel']) && $_POST['fuel'] == "Benzin" ? "selected" : "" ?>>Benzin</option>
@@ -205,7 +217,7 @@
 
     <div class="form-row">
     <div class="form-group col-md-6">
-        <label>Hengerűrtartalom</label>
+        <label class="font-weight-bold">Hengerűrtartalom</label>
 
         <div class="input-group-append">
         <input type="text" class="form-control <?php echo isset($errors['engineCapacity']) ? 'border border-danger' : ''; ?>" name="engineCapacity" value="<?=isset($_POST['engineCapacity']) ? $_POST['engineCapacity'] : "";?>">
@@ -214,7 +226,7 @@
         <small class="text-danger"><?php echo DisplayError('engineCapacity'); ?></small>
       </div>
         <div class="form-group col-md-6">
-            <label>Szín</label>
+            <label class="font-weight-bold">Szín</label>
             <select class="form-control <?php echo isset($errors['color']) ? 'border border-danger' : ''; ?>" name="color">
             <option>Válassz színt!</option>
               <option <?= isset($_POST['color']) && $_POST['color'] == "Fekete" ? "selected" : "" ?>>Fekete</option>
@@ -230,13 +242,13 @@
 
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label>Rendszám</label>
+            <label class="font-weight-bold">Rendszám</label>
             <input type="text" class="form-control <?php echo isset($errors['licencePlate']) ? 'border border-danger' : ''; ?>" name="licencePlate" placeholder="ABC-123" value="<?=isset($_POST['licencePlate']) ? $_POST['licencePlate'] : "";?>">
             <small class="text-danger"><?php echo DisplayError('licencePlate'); ?></small>
         </div>
 
         <div class="form-group col-md-1">
-            <label>Telefonszám</label>
+            <label class="font-weight-bold">Telefonszám</label>
             <input type="text" class="form-control" value="+36" readonly>
         </div>
         <div class="form-group col-md-1">
@@ -257,8 +269,16 @@
 
     <div class="form-row">
         <div class="form-group col-md-12">
-          <label>Egyéb információk / Leírás</label>
+          <label class="font-weight-bold">Egyéb információk / Leírás</label>
           <input type="text" class="form-control" name="description" value="<?=isset($_POST['description']) ? $_POST['description'] : "";?>">
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+          <label class="font-weight-bold">Kép feltöltése</label>
+          <input type="file" class="form-control-file <?php echo isset($errors['image']) ? 'border border-danger' : ''; ?>" name="image">
+          <small class="text-danger"><?php echo DisplayError('image'); ?></small>
         </div>
     </div>
 
