@@ -1,6 +1,6 @@
 <?php
 require_once DATABASE_CONTROLLER;
-function insertAdvertisement($userid, $title, $licencePlate, $brand, $model, $vintage, $type, $condition, $price, $kilometer, $fuel, $engineCapacity, $color, $description, $contact){
+function insertAdvertisement($userid, $title, $licencePlate, $brand, $model, $vintage, $type, $condition, $price, $kilometer, $fuel, $engineCapacity, $color, $description, $contact,$image){
     $checkQuery = "SELECT id FROM advertisementDetails WHERE licencePlate = :licencePlate";
     $checkParams = [
         ':licencePlate' => $licencePlate
@@ -19,8 +19,8 @@ function insertAdvertisement($userid, $title, $licencePlate, $brand, $model, $vi
 
         if($success){
             $adID = $connection->lastInsertId();
-            $query = "INSERT INTO advertisementDetails(advertisementId,licencePlate,brand,model,vintage,type,`condition`,price,kilometer,fuel,engineCapacity,color,description,contact) 
-                VALUES (:advertisement_id, :licence_plate, :brand, :model, :vintage, :type, :condition, :price, :kilometer, :fuel, :engine_capacity, :color, :description, :contact)";
+            $query = "INSERT INTO advertisementDetails(advertisementId,licencePlate,brand,model,vintage,type,`condition`,price,kilometer,fuel,engineCapacity,color,description,contact, image) 
+                VALUES (:advertisement_id, :licence_plate, :brand, :model, :vintage, :type, :condition, :price, :kilometer, :fuel, :engine_capacity, :color, :description, :contact, :image)";
             $params = [
                 ':advertisement_id' => $adID,
                 ':licence_plate' => $licencePlate,
@@ -35,7 +35,8 @@ function insertAdvertisement($userid, $title, $licencePlate, $brand, $model, $vi
                 ':engine_capacity' => $engineCapacity,
                 ':color' => $color,
                 ':description' => $description,
-                ':contact' => $contact
+                ':contact' => $contact,
+                ':image' => $image
             ];
 
             $statement = $connection->prepare($query);
