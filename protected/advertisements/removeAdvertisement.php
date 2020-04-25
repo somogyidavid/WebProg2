@@ -20,7 +20,17 @@
             ':id' => $_GET['id']
         ];
 
+        $deleteImageQuery = "SELECT image FROM advertisementDetails WHERE advertisementId = :id";
+        $deleteImageParams = [
+            ':id' => $_GET['id']
+        ];
+
+        $imageToDelete = getRecord($deleteImageQuery,$deleteImageParams);
+
         if(executeDML($deleteQuery,$param)){
+            $filepath = 'public/images/'.$imageToDelete['image'];
+
+            unlink($filepath);
             $query = "SELECT * FROM advertisements WHERE id=:id";
             $param = [
                 ':id' => $_GET['id']
@@ -34,7 +44,7 @@
                 ':id' => $_GET['id']
             ];
 
-            if(executeDML($deleteQuery,$param)) header('Location: index.php');
+            if(executeDML($deleteQuery,$param)) header('Location: index.php?P=home&successful_ad_remove=1');
         }
     ?>
 <?php endif; ?>
