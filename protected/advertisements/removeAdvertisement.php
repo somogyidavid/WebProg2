@@ -1,6 +1,8 @@
-<?php if(!isset($_GET['id']) || empty($_GET['id'])) header('Location: index.php')?>
-<?php if(!isset($_SESSION['permission']) || $_SESSION['permission'] < 1 || ($_SESSION['permission'] < 1 && $_SESSION['uid'] != $_GET['id'])) : ?>
-    <h1>Nincs jogosultságod ennek a hirdetésnek a törléséhez.</h1>
+<?php if(!isset($_GET['id']) || empty($_GET['id']) || !isset($_GET['uid']) || empty($_GET['uid'])) header('Location: index.php')?>
+<?php if(!isset($_SESSION['permission'])) : ?>
+    <div class="container"><h1>Nincs jogosultságod ennek a hirdetésnek a törléséhez!</h1></div>
+<?php elseif($_SESSION['permission'] < 1 && $_SESSION['uid'] != $_GET['uid']) : ?>
+    <div class="container"><h1>Nincs jogosultságod ennek a hirdetésnek a törléséhez!</h1></div>
 <?php else: ?>
     <?php
         require_once DATABASE_CONTROLLER;
