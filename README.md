@@ -23,7 +23,7 @@
 -Üzemanyag<br>
 -Hengerűrtartalom<br>
 -Szín<br>
--Max. 6 darab kép/hirdetés<br>
+-Max. 1 darab kép/hirdetés<br>
 -Egyéb információk / leírás<br>
 -Elérhetőségek
 
