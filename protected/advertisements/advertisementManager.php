@@ -51,4 +51,52 @@ function insertAdvertisement($userid, $title, $licencePlate, $brand, $model, $vi
         }
     }
 }
+
+function updateAdvertisement($id, $userid, $title, $licencePlate, $brand, $model, $vintage, $type, $condition, $price, $kilometer, $fuel, $engineCapacity, $color, $description, $contact){
+    $connection = getConnection();
+    $checkQuery = "SELECT id FROM advertisementDetails WHERE licencePlate=:licencePlate";
+    $checkParams = [
+        ':licencePlate' => $licencePlate
+    ];
+    $record = getRecord($checkQuery,$checkParams);
+    
+    if(!empty($record)){
+        $query = "UPDATE advertisementDetails SET licencePlate=:licencePlate, brand=:brand, model=:model, vintage=:vintage, type=:type, `condition`=:condition, price=:price, kilometer=:kilometer, fuel=:fuel, engineCapacity=:engineCapacity, color=:color, description=:description, contact=:contact WHERE advertisementId=:id";
+        $params = [
+            ':id' => $id,
+            ':licencePlate' => $licencePlate,
+            ':brand' => $brand,
+            ':model' => $model,
+            ':vintage' => $vintage,
+            ':type' => $type,
+            ':condition' => $condition,
+            ':price' => $price,
+            ':kilometer' => $kilometer,
+            ':fuel' => $fuel,
+            ':engineCapacity' => $engineCapacity,
+            ':color' => $color,
+            ':description' => $description,
+            ':contact' => $contact
+        ];
+
+        $statement = $connection->prepare($query);
+        $success = $statement->execute($params);
+
+        if($success){
+            $query = "UPDATE advertisements SET title=:title WHERE id=:id";
+            $params = [
+                ':title' => $title,
+                ':id' => $id
+            ];
+
+            $statement = $connection->prepare($query);
+            $success = $statement->execute($params);
+
+            if($success){
+                return true;
+            }
+            else return false;
+        }
+    }
+}
 ?>
