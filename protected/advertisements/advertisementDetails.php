@@ -39,7 +39,6 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
             <div class="col-md-6">
                 <div class="container mt-4">
@@ -97,7 +96,7 @@
                     </table>
                     <div class="form-row text-center">
                         <div class="form-group col-md-4">
-                            <a href="javascript:history.go(-1)" class="btn btn-dark mt-2">Vissza</a>
+                            <a href="<?= array_key_exists('management',$_GET) && isset($_GET['management']) ? "index.php?P=advertisementManagement" : "index.php" ?>" class="btn btn-dark mt-2">Vissza</a>
                         </div>
                         <?php if($_SESSION['permission'] >= 1 || $_SESSION['uid'] == $_GET['uid']) : ?>
                         <div class="form-group col-md-4">
