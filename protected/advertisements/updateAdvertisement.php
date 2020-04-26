@@ -90,7 +90,10 @@
             $contact = '+36'.$postData['contact1'].$postData['contact2'];
 
             if(updateAdvertisement($details['id'], $_SESSION['uid'],$postData['title'], $postData['licencePlate'],$postData['brand'],$postData['model'],$postData['vintage'],$postData['type'],$postData['condition'],$postData['price'],$postData['kilometer'],$postData['fuel'],$postData['capacity'],$postData['color'],$postData['description'],$contact)){
-                header('Location: index.php?P=advertisementDetails&id='.$details['id'].'&uid='.$details['userId'].'&successful_update=1');
+                if(!array_key_exists('management',$_GET) && isset($_GET['management'])){
+                    header('Location: index.php?P=advertisementManagement');
+                }
+                else header('Location: index.php?P=advertisementDetails&id='.$details['id'].'&uid='.$details['userId'].'&successful_update=1');
             }
             else{
                 DisplayCustomError("Hiba történt a módosítás során!");
@@ -320,7 +323,7 @@
         </div>
 
         <div class="text-center">
-        <a class="btn btn-lg btn-primary mb-3 w-20" href="index.php?P=advertisementDetails&id=<?=$details['id']?>&uid=<?=$details['userId']?>">Mégsem</a>
+        <a class="btn btn-lg btn-primary mb-3 w-20" href="<?= array_key_exists('management',$_GET) && isset($_GET['management']) ? "index.php?P=advertisementManagement" : "index.php?P=advertisementDetails&id=".$details['id']."&uid=".$details['userId'] ?>">Mégsem</a>
         </div>
 
     </form>
