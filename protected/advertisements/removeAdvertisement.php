@@ -44,7 +44,14 @@
                 ':id' => $_GET['id']
             ];
 
-            if(executeDML($deleteQuery,$param)) header('Location: index.php?P=home&successful_ad_remove=1');
+            if(executeDML($deleteQuery,$param)){
+                if(array_key_exists('management',$_GET) && isset($_GET['management'])){
+                    header('Location: index.php?P=advertisementManagement&successful_ad_remove=1');
+                }
+                else{
+                    header('Location: index.php?P=home&successful_ad_remove=1');
+                }
+            }
         }
     ?>
 <?php endif; ?>
