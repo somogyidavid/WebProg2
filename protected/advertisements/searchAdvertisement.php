@@ -11,38 +11,52 @@
 
       $errors=[];
       $conditions = false;
+      $params = [];
 
-      if($_POST['brandSelect'] != -1 || $_POST['model'] != -1 || $_POST['minVintage'] != -1 || $_POST['maxVintage'] != -1 || $_POST['type'] != -1 || $_POST['condition'] != -1 || !empty($_POST['minPrice']) || !empty($_POST['maxPrice']) || !empty($_POST['minKilometer']) || !empty($_POST['maxKilometer']) || $_POST['fuel'] != -1 || !empty($_POST['minEngineCapacity']) || !empty($_POST['maxEngineCapacity']) || $_POST['color'] != -1 || !empty($_POST['licencePlate']) || $_POST['brandSelect'] != -1 || $_POST['model'] != -1){
+      if($_POST['brandSelect'] != -1 || $_POST['minVintage'] != -1 || $_POST['maxVintage'] != -1 || $_POST['type'] != -1 || $_POST['condition'] != -1 || !empty($_POST['minPrice']) || !empty($_POST['maxPrice']) || !empty($_POST['minKilometer']) || !empty($_POST['maxKilometer']) || $_POST['fuel'] != -1 || !empty($_POST['minEngineCapacity']) || !empty($_POST['maxEngineCapacity']) || $_POST['color'] != -1 || !empty($_POST['licencePlate']) || $_POST['brandSelect'] != -1 || $_POST['model'] != -1){
         $search_query.='WHERE ';
         $conditions = true;
       }
 
       if($_POST['brandSelect'] != -1 && !isset($_POST['modelCheck'])){
-        $search_query.='det.brand='.$_POST['brandSelect'].' AND ';
+        $search_query.='det.brand=:brand AND ';
+        $params += [':brand' => $_POST['brandSelect']];
       }
       else if($_POST['brandSelect'] != -1 && isset($_POST['modelCheck'])){
-        $search_query.='det.brand='.$_POST['brandSelect'].' AND det.model='.$_POST['model'].' AND ';
+        $search_query.='det.brand=:brand AND det.model=:model AND ';
+        $params += [
+          ':brand' => $_POST['brandSelect'],
+          ':model' => $_POST['model']
+        ];
       }
 
       if($_POST['minVintage'] != -1 && $_POST['maxVintage'] != -1 && $_POST['minVintage'] > $_POST['maxVintage']){
         $errors['vintage'][] = "Nem megfelelő évjárat!";
       }
       else if(isset($_POST['minVintage']) && $_POST['minVintage'] != -1 && $_POST['maxVintage'] == -1){
-        $search_query.='det.vintage>='.$_POST['minVintage'].' AND ';
+        $search_query.='det.vintage>=:minVintage AND ';
+        $params += [':minVintage' => $_POST['minVintage']];
       }
       else if($_POST['minVintage'] == -1 && isset($_POST['maxVintage']) && $_POST['maxVintage'] != -1){
-        $search_query.='det.vintage<='.$_POST['maxVintage'].' AND ';
+        $search_query.='det.vintage<=:maxVintage AND ';
+        $params += [':maxVintage' => $_POST['maxVintage']];
       }
       else if(isset($_POST['minVintage']) && $_POST['minVintage'] != -1 && isset($_POST['maxVintage']) && $_POST['maxVintage'] != -1){
-        $search_query.='det.vintage BETWEEN '.$_POST['minVintage'].' AND '.$_POST['maxVintage'].' AND ';
+        $search_query.='det.vintage BETWEEN :minVintage AND :maxVintage AND ';
+        $params += [
+          ':minVintage' => $_POST['minVintage'],
+          ':maxVintage' => $_POST['maxVintage']
+        ];
       }
 
       if($_POST['type'] != -1){
-        $search_query.='det.type="'.$_POST['type'].'" AND ';
+        $search_query.='det.type=:type AND ';
+        $params += [':type' => $_POST['type']];
       }
 
       if($_POST['condition'] != -1){
-        $search_query.='det.condition="'.$_POST['condition'].'" AND ';
+        $search_query.='det.condition=:condition AND ';
+        $params += [':condition' => $_POST['condition']];
       }
       
   
@@ -50,79 +64,107 @@
         $errors['price'][] = "Nem megfelelő ár!";
       }
       else if(!empty($_POST['minPrice']) && empty($_POST['maxPrice'])){
-        $search_query.='det.price>='.$_POST['minPrice'].' AND ';
+        $search_query.='det.price>=:minPrice AND ';
+        $params += [':minPrice' => $_POST['minPrice']];
       }
       else if(empty($_POST['minPrice']) && !empty($_POST['maxPrice'])){
-        $search_query.='det.price<='.$_POST['maxPrice'].' AND ';
+        $search_query.='det.price<=:maxPrice AND ';
+        $params += [':maxPrice' => $_POST['maxPrice']];
       }
       else if(!empty($_POST['minPrice']) && !empty($_POST['maxPrice'])){
-        $search_query.='det.price BETWEEN '.$_POST['minPrice'].' AND '.$_POST['maxPrice'].' AND ';
+        $search_query.='det.price BETWEEN :minPrice AND :maxPrice AND ';
+        $params += [
+          ':minPrice' => $_POST['minPrice'],
+          ':maxPrice' => $_POST['maxPrice']
+        ];
       }
 
       if(($_POST['minKilometer'] > $_POST['maxKilometer'] && !empty($_POST['maxKilometer'])) || $_POST['minKilometer'] < 0 || $_POST['maxKilometer'] < 0){
         $errors['kilometer'][] = "Nem érvényes km!";
       }
       else if(!empty($_POST['minKilometer']) && empty($_POST['maxKilometer'])){
-        $search_query.='det.kilometer>='.$_POST['minKilometer'].' AND ';
+        $search_query.='det.kilometer>=:minKilometer AND ';
+        $params += [':minKilometer' => $_POST['minKilometer']];
       }
       else if(empty($_POST['minKilometer']) && !empty($_POST['maxKilometer'])){
-        $search_query.='det.kilometer<='.$_POST['maxKilometer'].' AND ';
+        $search_query.='det.kilometer<=:maxKilometer AND ';
+        $params += [':maxKilometer' => $_POST['maxKilometer']];
       }
       else if(!empty($_POST['minKilometer']) && !empty($_POST['maxKilometer'])){
-        $search_query.='det.kilometer BETWEEN '.$_POST['minKilometer'].' AND '.$_POST['maxKilometer'].' AND ';
+        $search_query.='det.kilometer BETWEEN :minKilometer AND :maxKilometer AND ';
+        $params += [
+          ':minKilometer' => $_POST['minKilometer'],
+          ':maxKilometer' => $_POST['maxKilometer']
+        ];
       }
 
       if($_POST['fuel'] != -1){
-        $search_query.='det.fuel="'.$_POST['fuel'].'" AND ';
+        $search_query.='det.fuel=:fuel AND ';
+        $params += [':fuel' => $_POST['fuel']];
       }
 
       if(($_POST['minEngineCapacity'] > $_POST['maxEngineCapacity'] && !empty($_POST['maxEngineCapacity'])) || $_POST['minEngineCapacity'] < 0 || $_POST['maxEngineCapacity'] < 0){
         $errors['engineCapacity'][] = "Nem érvényes hengerűrtartalom!";
       }
       else if(!empty($_POST['minEngineCapacity']) && empty($_POST['maxEngineCapacity'])){
-        $search_query.='det.engineCapacity>='.$_POST['minEngineCapacity'].' AND ';
+        $search_query.='det.engineCapacity>=:minEngineCapacity AND ';
+        $params += [':minEngineCapacity' => $_POST['minEngineCapacity']];
       }
       else if(empty($_POST['minEngineCapacity']) && !empty($_POST['maxEngineCapacity'])){
-        $search_query.='det.engineCapacity<='.$_POST['maxEngineCapacity'].' AND ';
+        $search_query.='det.engineCapacity<=:maxEngineCapacity AND ';
+        $params += [':maxEngineCapacity' => $_POST['maxEngineCapacity']];
       }
       else if(!empty($_POST['minEngineCapacity']) && !empty($_POST['maxEngineCapacity'])){
-        $search_query.='det.engineCapacity BETWEEN '.$_POST['minEngineCapacity'].' AND '.$_POST['maxEngineCapacity'].' AND ';
+        $search_query.='det.engineCapacity BETWEEN :minEngineCapacity AND :maxEngineCapacity AND ';
+        $params += [
+          ':minEngineCapacity' => $_POST['minEngineCapacity'],
+          ':maxEngineCapacity' => $_POST['maxEngineCapacity']
+        ];
       }
 
       if($_POST['color'] != -1){
-        $search_query.='det.color="'.$_POST['color'].'" AND ';
+        $search_query.='det.color=:color AND ';
+        $params += [':color' => $_POST['color']];
       }
 
       if(isset($_POST['licencePlate']) && Valid_LicensePlate($_POST['licencePlate']) == 0 && !empty($_POST['licencePlate'])){
         $errors['licencePlate'][] = "Nem megfelelő rendszám formátum!";
       }
       else if(!empty($_POST['licencePlate'])){
-        $search_query.='det.licencePlate="'.$_POST['licencePlate'].'" AND ';
+        $search_query.='det.licencePlate=:licencePlate AND ';
+        $params += [':licencePlate' => $_POST['licencePlate']];
       }
 
       if($conditions){
         $search_query = substr($search_query,0,strlen($search_query)-5);
       }
-      $advertisements = getList($search_query);
 
+      if($conditions){
+        //die(var_dump($params,$search_query));
+        $advertisements = getList($search_query,$params);
+      }
+      else{
+      $advertisements = getList($search_query);
+      }
       //echo $search_query;
 }
 
   ?>
+  
   <div class="text-center">
   </div>
   </div>
-    
+
   <div class="container mt-5 register-container" style="background-color: white;">
   
-  <form method="post" enctype="multipart/form-data">
+  <form method="post" enctype="multipart/form-data" id="searchForm" action="#span">
   <h1 class="h3 mb-3 text-center font-weight-bold">Hirdetés keresése</h1>
 
     <div class="form-row">
         <div class="form-group col-md-6">
             <label class="font-weight-bold">Márka</label>
             <select class="form-control <?php echo isset($errors['brand']) ? 'border border-danger' : ''; ?>" name="brandSelect" id="sel_brand">
-              <option value="-1">Válassz egy márkát!</option>
+              <option value="-1" selected>Válassz egy márkát!</option>
                   <?php
                       $sql_brand = "SELECT * FROM brands";
                       $brand_data = mysqli_query($con,$sql_brand);
@@ -139,7 +181,7 @@
         <div class="form-group col-md-6">
             <label class="font-weight-bold">Modell</label>
                 <input type="checkbox" name="modelCheck" id="modelCheck" onclick="EnableDisableTextBox(this)" checked value="1">
-                <select class="form-control" name="model" id="sel_model">
+                <select class="form-control" id="sel_model" name="model">
                   <option value="-1">Válassz egy modellt!</option>
             </select>
         </div>
@@ -289,11 +331,12 @@
     </div>
 
     <div class="text-center">
-      <button class="btn btn-lg btn-primary mb-3 w-50" type="submit" name="searchAd">Hirdetés keresése</button>
+      <button class="btn btn-lg btn-primary mb-3 w-50" type="submit" name="searchAd" id="search">Hirdetés keresése</button>
     </div>
   </form>
   </div>
   
+  <span id="span"></span>
   <div class="container text-center">
   <?php if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['searchAd'])) : ?>
     <?php if(count($advertisements) <= 0) : ?>
@@ -320,9 +363,9 @@
                       </div>
                   </div>
               </div>
-
           <?php endfor ; ?>
               </div>
       <?php endif; ?>
+      <a href="#top" class="btn btn-primary">Vissza az oldal tetejére</a>
  <?php endif; ?>
   </div>
