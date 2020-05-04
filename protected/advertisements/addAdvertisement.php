@@ -1,3 +1,4 @@
+<?php ob_start(); ?>
 <div class="container mt-5">
   <?php
     require_once 'public/brandConfig.php';
@@ -79,6 +80,7 @@
         if(insertAdvertisement($_SESSION['uid'],$postData['title'], $postData['licencePlate'],$postData['brand'],$postData['model'],$postData['vintage'],$postData['type'],$postData['condition'],$postData['price'],$postData['kilometer'],$postData['fuel'],$postData['capacity'],$postData['color'],$postData['description'],$contact,$postData['image'])){
           if(move_uploaded_file($_FILES['image']['tmp_name'],$target)){
             header('Location: index.php?P=home&successful_ad_insert=1');
+            ob_end_flush();
           }
           else{
             DisplayCustomError("Sikertelen fájlfeltöltés!");
