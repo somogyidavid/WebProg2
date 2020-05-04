@@ -3,7 +3,7 @@
 <?php require_once USER_MANAGER; ?>
 
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu" id="top">
 <head>
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,6 +40,26 @@
                 });
             });
 
+        });
+    </script>
+
+    <script type="text/javascript">
+        function EnableDisableTextBox(modelCheck) {
+            var sel_model = document.getElementById("sel_model");
+            sel_model.disabled = modelCheck.checked ? false : true;
+            if (!sel_model.disabled) {
+                sel_model.focus();
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#search').click(function(){
+                $('html, body').animate({
+                    scrollTop: $('#span').offset().top
+                }, 'slow');
+            });
         });
     </script>
 
