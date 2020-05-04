@@ -1,4 +1,5 @@
 <?php
+    ob_start();
     function IsUserLoggedIn(){
         //die(var_dump($_SESSION));
         return $_SESSION != null && array_key_exists('uid',$_SESSION) && is_numeric($_SESSION['uid']);
@@ -8,6 +9,7 @@
         session_unset();
         session_destroy();
         header('Location: index.php');
+        ob_end_flush();
     }
 
     function UserLogin($email,$password){
@@ -51,4 +53,33 @@
         }
         return false;
     }
+
+    function updateUser($id, $first_name, $last_name, $email, $password){
+        require_once DATABASE_CONTROLLER;
+        $connection = getConnection();
+        $checkQuery = "SELECT id FROM users where email=:email";
+        $checkParams = [
+            ':email' => $email
+        ];
+
+        $record = getRecord($checkQuery, $checkParams);
+
+        if(!empty($record)){
+            $query = "UPDATE users SET first_name=:first_name, last_name=:last_name, email=:email, password=:password WHERE id=:id";
+            $params = [
+                ':id' => $id,
+                ':first_name' => $first_name,
+                ':last_name' => $last_name,
+                ':email' => $email,
+                ':password' => sha1($password)
+            ];
+
+            if(executeDML($query,$params)){
+                return true;
+            }
+            else return false;
+        }
+        else return false;
+    }
+
 ?>
