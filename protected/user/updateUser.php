@@ -44,7 +44,12 @@
         }
 
         if(count($errors) == 0 && updateUser($postData['id'], $postData['fname'],$postData['lname'], $postData['email'],$postData['password'])){
+          if(array_key_exists('management',$_GET)){
+            header('Location: index.php?P=userManagement&successful_user_update=1');
+          }
+          else{
             header('Location: index.php?P=profile&uid='.$_GET['uid'].'&successful_user_update=1');
+          }  
             ob_end_flush();
         }
 
@@ -102,6 +107,9 @@
       <button class="btn btn-lg btn-primary mb-3 w-50" type="submit" name="updateUser">Adatok módosítása</button>
     </div>
   </form>
+  <div class="text-center">
+        <a class="btn btn-lg btn-primary mb-3 w-20" href="<?= array_key_exists('management',$_GET) ? "index.php?P=userManagement" : "index.php?P=profile&uid=".$userDetails['id'] ?>">Mégsem</a>
+        </div>
   </div>
 
 <?php endif; ?>
