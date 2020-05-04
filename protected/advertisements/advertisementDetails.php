@@ -103,7 +103,7 @@
                             <a href="index.php?P=updateAdvertisement&id=<?=$details['id']?>&uid=<?=$details['userId']?>" class="btn btn-dark mt-2">Szerkesztés</a>
                         </div>
                         <div class="form-group col-md-4">
-                            <a href="index.php?P=removeAdvertisement&id=<?=$details['id']?>&uid=<?=$details['userId']?>" class="btn btn-dark mt-2">Törlés</a>
+                            <a href="index.php?P=removeAdvertisement&id=<?=$details['id']?>&uid=<?=$details['userId']?>" class="btn btn-dark mt-2" onclick="return confirm('Biztos törlöd?')">Törlés</a>
                         </div>
                         <?php endif; ?>
                     </div>
