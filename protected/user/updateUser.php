@@ -17,7 +17,7 @@
 
       $errors=[];
 
-      if(empty($_POST['first_name']) || empty($_POST['last_name']) || empty($_POST['email']) || empty($_POST['email1']) || empty($_POST['password']) || empty($_POST['password1'])){
+      if(empty($_POST['first_name']) || empty($_POST['last_name']) || empty($_POST['email']) || empty($_POST['email1'])){
         $errors['general'][] = "Hiányzó adat(ok)!";
       }
       if($_POST['email'] != $_POST['email1']){
@@ -29,7 +29,7 @@
       if($_POST['password'] != $_POST['password1']){
         $errors['password'][] = "A jelszavak nem egyeznek!";
       }
-      if(strlen($_POST['password']) < 6){
+      if(strlen($_POST['password']) < 6 && !empty($_POST['password'])){
         $errors['password'][] = "A jelszó túl rövid! Legalább 6 karakter hosszúnak kell lennie!";
       }
 
@@ -38,12 +38,13 @@
                 'id' => $_GET['uid'],
                 'fname' => $_POST['first_name'],
                 'lname' => $_POST['last_name'],
+                'lastEmail' => $userDetails['email'],
                 'email' => $_POST['email'],
-                'password' => $_POST['password'],
+                'password' => empty($_POST['password']) ? "" : $_POST['password']
             ];
         }
 
-        if(count($errors) == 0 && updateUser($postData['id'], $postData['fname'],$postData['lname'], $postData['email'],$postData['password'])){
+        if(count($errors) == 0 && updateUser($postData['id'], $postData['fname'], $postData['lname'], $postData['lastEmail'], $postData['email'], $postData['password'])){
           if(array_key_exists('management',$_GET)){
             header('Location: index.php?P=userManagement&successful_user_update=1');
           }
@@ -83,7 +84,7 @@
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="registerEmail">Email</label>
-        <input type="email" class="form-control <?php echo isset($errors['email']) ? 'border border-danger' : ''; ?>" id="registerEmail" name="email" value="<?=isset($userDetails) ? $userDetails['email'] : "";?>">
+        <input type="email" class="form-control <?php echo isset($errors['email']) ? 'border border-danger' : ''; ?>" name="email" value="<?=isset($userDetails) ? $userDetails['email'] : "";?>">
         <small class="text-danger"><?php echo DisplayError('email'); ?></small>
       </div>
     <div class="form-group col-md-6">
