@@ -24,7 +24,7 @@
 </div>
 
 <div class="container bg-dark text-white mt-2 pb-0 mt-5 text-center">
-    <h1 class="pb-2">Saját profil</h1>
+    <h1 class="pb-2">Profil</h1>
 </div>
 <div class="container mt-5 text-center">
         <table class="table table-dark table-striped">
@@ -54,7 +54,7 @@
         </div>
     <?php endif; ?>
         <div class="col-md-<?= $_SESSION['permission'] || $_SESSION['uid'] == $_GET['uid'] > 0 ? "4" : "12" ?>">
-            <a href="#" class="btn btn-dark btn-lg">Vissza</a>
+            <a href="<?= array_key_exists('management',$_GET) ? "index.php?P=userManagement" : "index.php" ?>" class="btn btn-dark btn-lg">Vissza</a>
         </div>
     <?php if($_SESSION['permission'] > 0 || $_SESSION['uid'] == $_GET['uid']) : ?>
         <div class="col-md-4">
