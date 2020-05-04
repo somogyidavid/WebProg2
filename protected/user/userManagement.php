@@ -36,7 +36,7 @@
                                 <td><?=$u['email']?></td>
                                 <td><?= $u['permission'] < 1 ? "Felhasználó" : "Admin" ?></td>
                                 <td><a href="index.php?P=updateUser&uid=<?=$u['id']?>&management=1">&#x270D;</a></td>
-                                <td><a href="index.php?P=removeUser&uid=<?=$u['id']?>&management=1">&#10006;</a></td>
+                                <td><a href="index.php?P=removeUser&uid=<?=$u['id']?>&management=1" onclick="return confirm('Biztos törlöd?')">&#10006;</a></td>
                                 <td><a href="index.php?P=profile&uid=<?=$u['id']?>&management=1">&#128269;</a></td>
                             </tr>
                         <?php endforeach; ?>
