@@ -24,7 +24,9 @@
                         <p class="card-text">Model: <?=ucfirst(strtolower($advertisements[$i]['model_name']))?></p>
                         <p class="card-text">Évjárat: <?=ucfirst(strtolower($advertisements[$i]['vintage']))?></p>
                         <p class="card-text">Ár: <?=$advertisements[$i]['price']?> Ft</p>
+                    <?php if(IsUserLoggedIn()) : ?>
                         <a href="index.php?P=advertisementDetails&id=<?=$advertisements[$i]['id']?>&uid=<?=$advertisements[$i]['userId']?>" class="btn btn-primary">Részletek</a>
+                    <?php endif; ?>
                     </div>
                 </div>
             </div>
