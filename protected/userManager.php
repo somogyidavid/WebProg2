@@ -54,12 +54,12 @@
         return false;
     }
 
-    function updateUser($id, $first_name, $last_name, $email, $password){
+    function updateUser($id, $first_name, $last_name, $lastEmail, $email, $password){
         require_once DATABASE_CONTROLLER;
         $connection = getConnection();
         $checkQuery = "SELECT id FROM users where email=:email";
         $checkParams = [
-            ':email' => $email
+            ':email' => $lastEmail
         ];
 
         $record = getRecord($checkQuery, $checkParams);
