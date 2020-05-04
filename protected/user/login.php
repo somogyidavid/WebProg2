@@ -43,14 +43,9 @@
     <form class="form-signin" method="post">
       <h1 class="h3 mb-3 text-center font-weight-normal">Bejelentkezés</h1>
           <input type="email" id="inputEmail" class="form-control mb-4" placeholder="Email" name="email">
-          <input type="password" id="inputPassword" class="form-control" placeholder="Jelszó" name="password">
+          <input type="password" id="inputPassword" class="form-control mb-1" placeholder="Jelszó" name="password">
           <small class="text-danger"><?php echo DisplayError('wrongdata'); ?></small>
-      <div class="checkbox mb-4">
-          <label>
-            <input type="checkbox" value="remember-me"> Felhasználónév megjegyzése
-          </label>
-        </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit" name="login">Bejelentkezés</button>
+            <button class="btn btn-lg btn-primary btn-block mt-4" type="submit" name="login">Bejelentkezés</button>
       </form>
   </div>
 </div>
