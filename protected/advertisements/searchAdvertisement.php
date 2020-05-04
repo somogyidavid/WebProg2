@@ -13,7 +13,7 @@
       $conditions = false;
       $params = [];
 
-      if($_POST['brandSelect'] != -1 || $_POST['minVintage'] != -1 || $_POST['maxVintage'] != -1 || $_POST['type'] != -1 || $_POST['condition'] != -1 || !empty($_POST['minPrice']) || !empty($_POST['maxPrice']) || !empty($_POST['minKilometer']) || !empty($_POST['maxKilometer']) || $_POST['fuel'] != -1 || !empty($_POST['minEngineCapacity']) || !empty($_POST['maxEngineCapacity']) || $_POST['color'] != -1 || !empty($_POST['licencePlate']) || $_POST['brandSelect'] != -1 || $_POST['model'] != -1){
+      if($_POST['brandSelect'] != -1 || $_POST['minVintage'] != -1 || $_POST['maxVintage'] != -1 || $_POST['type'] != -1 || $_POST['condition'] != -1 || !empty($_POST['minPrice']) || !empty($_POST['maxPrice']) || !empty($_POST['minKilometer']) || !empty($_POST['maxKilometer']) || $_POST['fuel'] != -1 || !empty($_POST['minEngineCapacity']) || !empty($_POST['maxEngineCapacity']) || $_POST['color'] != -1 || !empty($_POST['licencePlate'])){
         $search_query.='WHERE ';
         $conditions = true;
       }
