@@ -1,3 +1,4 @@
+<?php ob_start(); ?>
 <?php if(!isset($_GET['id']) || empty($_GET['id']) || !isset($_GET['uid']) || empty($_GET['uid'])) header('Location: index.php')?>
 <?php if(!isset($_SESSION['permission'])) : ?>
     <div class="container"><h1>Nincs jogosultságod ennek a hirdetésnek a módosításához!</h1></div>
@@ -10,18 +11,22 @@
             $id = $_GET['id'];
             $uid = $_GET['uid'];
 
-            $query = "SELECT ad.id, ad.userId, ad.title, det.licencePlate, brands.brand_name, models.model_name, det.vintage, det.type, det.condition, det.price, det.kilometer, det.fuel, det.engineCapacity, det.color, det.description, det.contact, det.image, det.brand, det.model FROM advertisements ad INNER JOIN advertisementdetails det ON ad.id = det.advertisementId INNER JOIN brands ON det.brand = brands.id INNER JOIN models ON det.model = models.id WHERE ad.id=:id";
+            $query = "SELECT ad.id, ad.userId, ad.title, det.licencePlate, brands.brand_name, models.model_name, det.vintage, det.type, det.condition, det.price, det.kilometer, det.fuel, det.engineCapacity, det.color, det.description, det.contact, det.image, det.brand, det.model FROM advertisements ad INNER JOIN advertisementdetails det ON ad.id = det.advertisementId INNER JOIN brands ON det.brand = brands.id INNER JOIN models ON det.model = models.id WHERE ad.id=:id AND ad.userId=:userId";
             $params = [
-                ':id' => $id
+                ':id' => $id,
+                ':userId' => $_SESSION['uid']
             ];
             $details = getRecord($query,$params);
+
+            if($details == false){
+                header('Location: index.php');
+            }
             
             $contact1 = substr($details['contact'],3,2);
             $contact2 = substr($details['contact'],5);
     ?>
-
     <div class="container mt-5">
-    <?php
+<?php
         require_once 'public/brandConfig.php';
         require_once PROTECTED_DIR.'functions.php';
         require_once 'advertisementManager.php';
@@ -70,8 +75,6 @@
             $postData = [
                 'licencePlate' => $_POST['licencePlate'],
                 'title' => $_POST['title'],
-                //'brand' => $_POST['brandSelect'],
-                //'model' => $_POST['model'],
                 'brand' => $_POST['brandSelect'] == 0 ? $details['brand'] : $_POST['brandSelect'],
                 'model' => $_POST['brandSelect'] == 0 ? $details['model'] : $_POST['model'],
                 'vintage' => $_POST['vintage'],
@@ -90,17 +93,20 @@
             $contact = '+36'.$postData['contact1'].$postData['contact2'];
 
             if(updateAdvertisement($details['id'], $_SESSION['uid'],$postData['title'], $postData['licencePlate'],$postData['brand'],$postData['model'],$postData['vintage'],$postData['type'],$postData['condition'],$postData['price'],$postData['kilometer'],$postData['fuel'],$postData['capacity'],$postData['color'],$postData['description'],$contact)){
-                if(!array_key_exists('management',$_GET) && isset($_GET['management'])){
+                if(array_key_exists('management',$_GET)){
                     header('Location: index.php?P=advertisementManagement');
                 }
-                else header('Location: index.php?P=advertisementDetails&id='.$details['id'].'&uid='.$details['userId'].'&successful_update=1');
+                else{
+                    header('Location: index.php?P=advertisementDetails&id='.$details['id'].'&uid='.$details['userId'].'&successful_update=1');
+                    ob_end_flush();
+                }
             }
             else{
                 DisplayCustomError("Hiba történt a módosítás során!");
             }
         }
         }
-    ?>
+?>
     <div class="text-center">
     <?php
         if(isset($errors['general'])){
