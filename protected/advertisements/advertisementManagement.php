@@ -40,7 +40,7 @@
                                 <td><?=$a['contact']?></td>
                                 <td><?=$a['email']?></td>
                                 <td><a href="index.php?P=updateAdvertisement&id=<?=$a['id']?>&uid=<?=$a['userId']?>&management=1">&#x270D;</a></td>
-                                <td><a href="index.php?P=removeAdvertisement&id=<?=$a['id']?>&uid=<?=$a['userId']?>&management=1">&#10006;</a></td>
+                                <td><a href="index.php?P=removeAdvertisement&id=<?=$a['id']?>&uid=<?=$a['userId']?>&management=1" onclick="return confirm('Biztos törlöd?')">&#10006;</a></td>
                                 <td><a href="index.php?P=advertisementDetails&id=<?=$a['id']?>&uid=<?=$a['userId']?>&management=1">&#128269;</a></td>
                             </tr>
                         <?php endforeach; ?>
