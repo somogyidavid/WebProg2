@@ -58,7 +58,7 @@
         </div>
     <?php if($_SESSION['permission'] > 0 || $_SESSION['uid'] == $_GET['uid']) : ?>
         <div class="col-md-4">
-            <a href="index.php?P=removeUser&uid=<?=$userDetails['id']?>" class="btn btn-dark">Törlés</a>
+            <a href="index.php?P=removeUser&uid=<?=$userDetails['id']?>" class="btn btn-dark" onclick="return confirm('Biztos törlöd?')">Törlés</a>
         </div>
     <?php endif; ?>
     </div>
