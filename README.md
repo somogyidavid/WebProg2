@@ -35,6 +35,7 @@
 -Regisztráció<br>
 -Profil megtekintése, szerkesztése<br>
 -Profilok kezelése<br>
+-Hirdetések kezelése<br>
 -Hirdetésfeladás, szerkesztés, törlés, megtekintés<br>
 -Összes és saját hirdetés megtekintése<br>
 -Listázás szűrése adott információ alapján<br>
