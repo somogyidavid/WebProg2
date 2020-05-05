@@ -65,14 +65,21 @@
         $record = getRecord($checkQuery, $checkParams);
 
         if(!empty($record)){
-            $query = "UPDATE users SET first_name=:first_name, last_name=:last_name, email=:email, password=:password WHERE id=:id";
+            $query = "UPDATE users SET first_name=:first_name, last_name=:last_name, email=:email";
             $params = [
                 ':id' => $id,
                 ':first_name' => $first_name,
                 ':last_name' => $last_name,
                 ':email' => $email,
-                ':password' => sha1($password)
             ];
+
+            if($password != ""){
+                $query.= ', password=:password WHERE id=:id';
+                $params[':password'] = sha1($password);
+            }
+            else if($password == ""){
+                $query.= ' WHERE id=:id';
+            }
 
             if(executeDML($query,$params)){
                 return true;
