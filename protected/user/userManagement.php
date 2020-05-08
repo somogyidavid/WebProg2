@@ -1,6 +1,6 @@
 <div class="container text-center">
 <?php if(!isset($_SESSION['permission']) || $_SESSION['permission'] < 1) : ?>
-    <h1>Nincs jogosultságod a hirdetések kezeléséhez!</h1>
+    <h1>Nincs jogosultságod a felhasználók kezeléséhez!</h1>
 <?php else: ?>
 <?php
     require_once DATABASE_CONTROLLER;
